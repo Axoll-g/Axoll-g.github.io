@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalkulator Hijau</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #a5d6a7;
+            font-family: Arial, sans-serif;
+            flex-direction: column;
+        }
+        .title {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1b5e20;
+            margin-bottom: 20px;
+        }
+        .calculator {
+            background: #2e7d32;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+        }
+        .display {
+            width: calc(100% - 20px);
+            height: 50px;
+            text-align: right;
+            padding: 10px;
+            font-size: 1.5em;
+            border: none;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            background: #a5d6a7;
+            color: #1b5e20;
+        }
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+        button {
+            padding: 15px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #388e3c;
+        }
+        .operator {
+            background: #1b5e20;
+        }
+        .operator:hover {
+            background: #0d4f12;
+        }
+        .zero {
+            grid-column: span 2;
+        }
+        .clearAndDelete {
+            background-color: #FFFBE5;
+            color: #0d4f12;
+        }
+        .clearAndDelete:hover{
+            background-color: #4caf50;
+            color: #FFFBE5;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 1em;
+            color: #a5d6a7;
+            background-color: #1b5e20;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            position: absolute;
+            bottom: 0;
+            padding: 10px 0;
+        }
+        .marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 15s linear infinite;
+            position: relative;
+            will-change: transform;
+            min-width: 100%;
+        }
+        @keyframes marquee {
+            from { transform: translateX(100vw); }
+            to { transform: translateX(-100%); }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">Apa yang akan kamu hitung hari ini?</div>
+    <div class="calculator">
+        <input type="text" class="display" id="display" disabled>
+        <div class="buttons">
+            <button onclick="clearDisplay()" class="clearAndDelete">C</button>
+            <button onclick="backspace()" class="clearAndDelete">⌫</button>
+            <button onclick="appendPercentage()" class="clearAndDelete">%</button>
+            <button onclick="appendValue('/')" class="operator">/</button>
+            <button onclick="appendValue('7')">7</button>
+            <button onclick="appendValue('8')">8</button>
+            <button onclick="appendValue('9')">9</button>
+            <button onclick="appendValue('*')" class="operator">×</button>
+            <button onclick="appendValue('4')">4</button>
+            <button onclick="appendValue('5')">5</button>
+            <button onclick="appendValue('6')">6</button>
+            <button onclick="appendValue('-')" class="operator">-</button>
+            <button onclick="appendValue('1')">1</button>
+            <button onclick="appendValue('2')">2</button>
+            <button onclick="appendValue('3')">3</button>
+            <button onclick="appendValue('+')" class="operator">+</button>
+            <button onclick="appendValue('0')" class="zero">0</button>
+            <button onclick="appendDecimal()">.</button>
+            <button onclick="calculate()" class="operator">=</button>
+        </div>
+    </div>
+    <div class="footer"><span class="marquee">Made with 💖 by Gerard Pangaroan</span></div>
+    <script>
+        function appendValue(value) {
+            let display = document.getElementById('display');
+            display.value += value;
+        }
+
+        function appendDecimal() {
+            let display = document.getElementById('display');
+            let parts = display.value.split(/[\+\-\*\/]/); // Pisahkan ekspresi berdasarkan operator
+            let lastPart = parts[parts.length - 1];
+
+            // Cek jika sudah ada titik di bagian terakhir angka
+            if (!lastPart.includes('.')) {
+                display.value += '.';
+            }
+        }
+
+        function clearDisplay() {
+            document.getElementById('display').value = '';
+        }
+
+        function backspace() {
+            let display = document.getElementById('display');
+            display.value = display.value.slice(0, -1);
+        }
+
+        function calculate() {
+            try {
+                let display = document.getElementById('display');
+                let value = display.value; // JS sudah mengenali titik sebagai desimal
+
+                let result = eval(value.replace(/%/g, '/100')); // Evaluasi ekspresi
+                
+                // Jika hasilnya angka bulat, tampilkan tanpa desimal, jika tidak bulat tampilkan desimal
+                display.value = Number.isInteger(result) ? result : parseFloat(result.toFixed(6));
+            } catch {
+                document.getElementById('display').value = 'Error';
+            }
+        }
+
+        function appendPercentage() {
+            let display = document.getElementById('display');
+            if (display.value !== '') {
+                display.value += '%';
+            }
+        }
+    </script>
+</body>
+</html>
