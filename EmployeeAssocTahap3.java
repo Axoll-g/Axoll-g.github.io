@@ -1,0 +1,114 @@
+package Tugasteori;
+
+import java.text.NumberFormat;
+import java.util.Locale;
+
+class Util {
+    public static String formatRupiah(double amount) {
+        NumberFormat formatRupiah = NumberFormat.getCurrencyInstance(new Locale("id", "ID"));
+        return formatRupiah.format(amount);
+    }
+}
+
+class Perusahaan {
+    private final String namaPerusahaan;
+
+    public Perusahaan(String namaPerusahaan) {
+        this.namaPerusahaan = namaPerusahaan;
+    }
+
+    public String getNamaPerusahaan() {
+        return namaPerusahaan;
+    }
+}
+
+class Karyawan {
+    private String nama;
+    private int gajiPokok;
+    private Perusahaan perusahaan;
+
+    public Karyawan(String nama, int gajiPokok, Perusahaan perusahaan) {
+        setNama(nama);
+        this.gajiPokok = gajiPokok;
+        this.perusahaan = perusahaan;
+    }
+
+    public void setNama(String nama) {
+        if (nama.length() >= 4) {
+            this.nama = nama;
+        } else {
+            throw new IllegalArgumentException("Nama harus memiliki minimal 4 karakter.");
+        }
+    }
+
+    public String getNama() {
+        return nama;
+    }
+
+    public int getGajiPokok() {
+        return gajiPokok;
+    }
+
+    public Perusahaan getPerusahaan() {
+        return perusahaan;
+    }
+
+    public double hitungGaji() {
+        return gajiPokok;
+    }
+
+    public void infoGaji() {
+        System.out.println("Nama: " + nama);
+        System.out.println("Total Gaji: " + Util.formatRupiah(hitungGaji()));
+        System.out.println("Perusahaan: " + perusahaan.getNamaPerusahaan());
+    }
+}
+
+class Programmer extends Karyawan {
+    private double bonus;
+
+    public Programmer(String nama, int gajiPokok, Perusahaan perusahaan, double bonus) {
+        super(nama, gajiPokok, perusahaan);
+        this.bonus = bonus;
+    }
+
+    @Override
+    public double hitungGaji() {
+        return getGajiPokok() + bonus;
+    }
+}
+
+class Manager extends Karyawan {
+    private double insentif;
+    private String divisi;
+
+    public Manager(String nama, int gajiPokok, Perusahaan perusahaan, double insentif, String divisi) {
+        super(nama, gajiPokok, perusahaan);
+        this.insentif = insentif;
+        this.divisi = divisi;
+    }
+
+    @Override
+    public double hitungGaji() {
+        return getGajiPokok() + insentif;
+    }
+
+    public String getDivisi() {
+        return divisi;
+    }
+}
+
+public class EmployeeAssocTahap3 {
+    public static void main(String[] args) {
+        Perusahaan ptInovasi = new Perusahaan("PT. Inovasi Teknologi");
+        Perusahaan ptTeknologi = new Perusahaan("PT. Teknologi Jaya");
+
+        Karyawan karyawan = new Karyawan("Xolotl", 5000000, ptInovasi);
+        Programmer programmer = new Programmer("Arthamma", 6000000, ptInovasi, 1500000);
+        Manager manager = new Manager("Iman", 7000000, ptTeknologi, 2000000, "IT");
+
+        karyawan.infoGaji(); System.out.println();
+        programmer.infoGaji(); System.out.println();
+        manager.infoGaji();
+    }
+}
